@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230B0C10'/><rect x='20' y='20' width='60' height='60' fill='none' stroke='%23D4AF37' stroke-width='6'/></svg>">
+<title>Abhronil Paul — Electronics Engineer · High-Reliability PCB &amp; Space Systems</title>
+<meta name="description" content="Abhronil Paul — electronics engineer for space applications: high-reliability PCB design, instrumentation, and verification. ECSS / NASA-STD-8739 qualified designs. MSc Electronics Engineering, Politecnico di Milano.">
+<meta name="author" content="Abhronil Paul">
+<meta name="theme-color" content="#08080C">
+<meta property="og:title" content="Abhronil Paul — Electronics Engineer · High-Reliability PCB & Space Systems">
+<meta property="og:description" content="Hardware that survives launch, vacuum, and radiation. PCB design · avionics · verification.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Abhronil Paul",
+  "jobTitle": "Electronics Engineer — High-Reliability PCB & Space Systems",
+  "email": "mailto:paul.abhronil@gmail.com",
+  "alumniOf": ["Politecnico di Milano", "Thapar University"],
+  "knowsAbout": ["PCB Design", "Avionics", "Signal Integrity", "FPGA", "Embedded Systems", "Verification"],
+  "sameAs": ["https://github.com/PaulZeroOne", "https://linkedin.com/in/abhronilpaul0"]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080C; --panel: #121318; --panel2: #171922;
+    --line: #2A2C35; --line-strong: #3A3D49;
+    --text: #F0F0F5; --mut: #98A1AD; --faint: #6E7784;
+    --gold: #D4AF37; --cyan: #00F0FF; --orange: #FF5D00;
+    --sans: 'Space Grotesk', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --pad: clamp(20px, 4vw, 56px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55;
+    -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
+    transition: opacity 1.1s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 .5H80M.5 0V80' stroke='%23F0F0F5' stroke-opacity='.035'/%3E%3Cpath d='M0 4.5h9M4.5 0v9' stroke='%23F0F0F5' stroke-opacity='.12'/%3E%3C/svg%3E");
+    background-size: 80px 80px; }
+  body.crossed::before { opacity: 1; }
+  header, main, footer, #pbar { position: relative; z-index: 1; }
+  ::selection { background: rgba(212,175,55,0.28); }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; }
+
+  .wrap { max-width: 1320px; margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+  .mono { font-family: var(--mono); }
+  p, dd, dt { font-family: var(--mono); }
+  .hero-sub { font-size: 13px; line-height: 1.8; letter-spacing: 0.01em; }
+  .lead { font-size: 13.5px !important; line-height: 1.85; letter-spacing: 0.01em; }
+  .xrow p, .erow p { font-size: 12px; line-height: 1.7; }
+
+  /* ── HUD telemetry tags ── */
+  section, .hero-right, .fig, .grid9, .plist { position: relative; }
+  .hudtag { position: absolute; top: 0; right: 18px; transform: translateY(-50%); z-index: 2;
+    background: var(--bg); border: 1px solid var(--line); padding: 3px 10px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--faint); white-space: nowrap; }
+  .hudtag b { color: var(--gold); font-weight: 400; }
+  .hudtag.sec { right: var(--pad); }
+  @media (max-width: 700px) { .hudtag { display: none; } }
+
+  /* ── copper trace rails (scroll-drawn, desktop) ── */
+  .trace-rail { position: absolute; left: clamp(2px, 1.2vw, 20px); top: 0; pointer-events: none; z-index: 0; }
+  .trace-rail path { stroke: rgba(212,175,55,0.5); stroke-width: 1; fill: none; }
+  .trace-rail circle { fill: var(--bg); stroke: rgba(212,175,55,0.7); stroke-width: 1; }
+
+  /* systems status badges */
+  .sysb-col { display: flex; flex-direction: column; gap: 8px; margin-top: 26px; }
+  .sysb { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.16em; color: var(--faint);
+    border: 1px solid var(--line); padding: 8px 12px; }
+  .sysb b { color: var(--gold); font-weight: 400; }
+
+  /* ── personal blocks ── */
+  .princ { margin-top: 40px; border: 1px solid var(--line); background: var(--panel); }
+  .princ-h { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--faint); }
+  .princ ol { list-style: none; counter-reset: pr; }
+  .princ li { counter-increment: pr; display: grid; grid-template-columns: 36px 1fr; gap: 14px;
+    padding: 15px 16px; font-family: var(--mono); font-size: 12px; line-height: 1.7; color: var(--mut); }
+  .princ li + li { border-top: 1px solid var(--line); }
+  .princ li::before { content: "0" counter(pr); font-size: 10px; letter-spacing: 0.15em; color: var(--gold); padding-top: 3px; }
+  .princ li b { color: var(--text); font-weight: 500; }
+  .rlog { margin-top: 48px; }
+  .rrow { display: grid; grid-template-columns: 86px 220px 1fr; gap: 22px; padding: 15px 16px;
+    border: 1px solid var(--line); border-top: none; background: var(--bg); }
+  .rrow .rv { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--gold); padding-top: 2px; }
+  .rrow .rs { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--faint); padding-top: 2px; }
+  .rrow p { font-family: var(--mono); font-size: 12px; line-height: 1.65; color: var(--mut); }
+  .rrow p b { color: var(--text); font-weight: 500; }
+  .nowrow { display: flex; justify-content: space-between; gap: 14px; padding: 12px 2px;
+    border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; }
+  .nowrow dt { color: var(--faint); } .nowrow dd { color: var(--text); text-align: right; }
+  @media (max-width: 700px) { .rrow { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ── electronics motifs ── */
+  .fid { position: fixed; width: 14px; height: 14px; border: 1px solid rgba(212,175,55,0.45);
+    border-radius: 50%; z-index: 40; pointer-events: none; }
+  .fid::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: rgba(212,175,55,0.5); }
+  .fid.f1 { top: 84px; left: 16px; } .fid.f2 { bottom: 16px; left: 16px; } .fid.f3 { bottom: 16px; right: 16px; }
+  @media (max-width: 1000px) { .fid { display: none; } }
+
+  .idx::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    border: 1.5px solid var(--gold); margin-right: 10px; vertical-align: -1px;
+    background: radial-gradient(circle, var(--gold) 0 2px, transparent 2.6px); }
+
+  /* skill cells as IC packages: pin stubs, refdes, pin-1 dot */
+  .g9c { position: relative; }
+  .g9c::before, .g9c::after { content: ''; position: absolute; top: 16px; bottom: 16px; width: 4px;
+    background: repeating-linear-gradient(180deg, var(--line-strong) 0 7px, transparent 7px 16px); }
+  .g9c::before { left: 0; } .g9c::after { right: 0; }
+  .g9c u { position: absolute; top: 10px; right: 12px; text-decoration: none; font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.12em; color: var(--faint); }
+  .g9c em { position: absolute; top: 13px; left: 12px; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--faint); transition: background 0.15s; }
+  .g9c:hover em { background: var(--gold); }
+  .g9c i { margin-left: 14px; }
+
+  /* schematic title block */
+  .tblock { display: grid; grid-template-columns: auto 1fr; gap: 1px; background: var(--line);
+    border-top: 1px solid var(--line); font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; }
+  .tblock > span { background: var(--panel); padding: 7px 12px; color: var(--faint); }
+  .tblock > span:nth-child(even) { background: var(--bg); color: var(--text); text-align: right; }
+
+  /* stackup figure */
+  .fig2 rect.cu { fill: var(--gold); fill-opacity: 0.5; transition: fill-opacity 0.15s; }
+  .fig2 rect.plane { fill-opacity: 0.72; }
+  .fig2 rect.diel { fill: #16181F; stroke: var(--line); stroke-width: 0.5; }
+  .fig2 g.layer:hover rect.cu { fill-opacity: 1; }
+  .fig2 g.layer { cursor: help; }
+  .fig2 text { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; fill: var(--mut); }
+  .fig2 text.dim { fill: var(--faint); }
+  .fig2 .viapad { fill: none; stroke: var(--gold); stroke-opacity: 0.8; }
+
+  /* ground termination */
+  .gnd { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 44px 0 8px; }
+  .gnd svg { display: block; }
+  .gnd span { font-family: var(--mono); font-size: 9px; letter-spacing: 0.26em; color: var(--faint); }
+
+  /* ── progress ── */
+  #pbar { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--gold);
+    transform: scaleX(0); transform-origin: left; z-index: 60; }
+
+  /* ── header ── */
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(11,12,16,0.85);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .nav { display: flex; align-items: stretch; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 13px;
+    letter-spacing: 0.14em; text-decoration: none; font-weight: 600; }
+  .brand i { width: 10px; height: 10px; background: var(--gold); font-style: normal; }
+  .nav ul { display: flex; list-style: none; height: 100%; }
+  .nav ul a { display: flex; align-items: center; height: 100%; padding: 0 22px; font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.14em; color: var(--mut); text-decoration: none;
+    border-left: 1px solid var(--line); transition: color 0.15s, background 0.15s; }
+  .nav ul a:hover { color: var(--text); background: var(--panel); }
+  .nav ul a.active { color: var(--text); box-shadow: inset 0 -2px 0 var(--gold); }
+  .navcta { display: flex; align-items: center; }
+  .navclock { display: flex; align-items: center; padding: 0 20px; border-left: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; color: var(--faint);
+    font-variant-numeric: tabular-nums; }
+  @media (max-width: 1000px) { .navclock { display: none; } }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; background: var(--gold);
+    color: #0B0C10; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-decoration: none; border: 1px solid var(--gold); transition: background 0.12s, color 0.12s, transform 0.08s; }
+  .btn:hover { background: transparent; color: var(--gold); }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: transparent; color: var(--text); border-color: var(--line-strong); }
+  .btn.ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── hero ── */
+  /* PHASE 1+2: black-hole stage. #hero is a 215vh scroll runway; the canvas
+     and centre type are fixed and handed off once the horizon is crossed. */
+  #hero { height: 215vh; padding: 0; }
+  #bh-wrap { position: fixed; inset: 0; z-index: 1; background: #050508; }
+  #bh-wrap canvas { width: 100%; height: 100%; display: block; }
+  #bh-wrap.bh-fallback { background:
+    radial-gradient(circle at 50% 50%, #000 0 11%, rgba(212,175,55,0.35) 12.5%, rgba(240,240,245,0.12) 13.5%, #050508 42%); }
+  #bh-wrap.gone, .bh-center.gone { display: none; }
+  .bh-center { position: fixed; inset: 0; z-index: 2; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; gap: 26px;
+    padding: 0 var(--pad); pointer-events: none; will-change: transform, opacity; }
+  .bh-center .kicker { justify-content: center; margin-bottom: 0; }
+  .bh-err { position: absolute; bottom: 18px; left: 18px; font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.18em; color: var(--orange); border: 1px solid var(--line); padding: 5px 10px; }
+  .bh-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; color: var(--mut);
+    animation: subpulse 2.8s ease-in-out infinite; }
+  @keyframes subpulse { 50% { opacity: 0.4; } }
+  @media (prefers-reduced-motion: reduce) { .bh-sub { animation: none; } }
+  main > section:not(#hero), .ticker, footer { position: relative; z-index: 2; }
+  .ov-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: clamp(24px, 3vw, 48px); align-items: start; }
+  .ov-grid .hero-right { grid-column: auto; position: sticky; top: 92px; }
+  @media (max-width: 1000px) { .ov-grid { grid-template-columns: 1fr; } .ov-grid .hero-right { position: static; } }
+  .hero-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(24px, 3vw, 48px); align-items: end; }
+  .hero-left { grid-column: 1 / 8; }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; color: var(--mut);
+    display: flex; gap: 18px; margin-bottom: 34px; flex-wrap: wrap; }
+  .kicker b { color: var(--gold); font-weight: 500; }
+  .disp { font-size: clamp(42px, 6.6vw, 96px); line-height: 1.02; letter-spacing: -0.03em; font-weight: 600; }
+  .disp em { font-style: normal; color: var(--gold); }
+  .ln { display: block; overflow: hidden; }
+  .ln > span { display: block; will-change: transform; }
+  .hero-sub { margin-top: 30px; max-width: 52ch; color: var(--mut); font-size: 16.5px; }
+  .hero-right { grid-column: 9 / 13; border: 1px solid var(--line); }
+  .spec { display: flex; justify-content: space-between; gap: 16px; padding: 15px 18px;
+    border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; }
+  .spec dt { color: var(--faint); }
+  .spec dd { color: var(--text); text-align: right; }
+  .spec dd .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
+    margin-right: 8px; animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.25; } }
+  .hero-right .btn { width: 100%; justify-content: center; border: none; }
+
+  /* ── ticker ── */
+  .ticker { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .ticker-track { display: flex; width: max-content; animation: tick 46s linear infinite; }
+  .ticker span { padding: 13px 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.26em;
+    color: var(--faint); white-space: nowrap; }
+  .ticker b { color: var(--gold); font-weight: 400; padding: 0 18px; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+  /* ── sections ── */
+  section { padding-top: clamp(90px, 13vh, 150px); padding-bottom: clamp(90px, 13vh, 150px); }
+  section + section { border-top: 1px solid var(--line); }
+  .sec-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(24px, 3vw, 48px); }
+  .sec-head { grid-column: 1 / 5; }
+  .sec-body { grid-column: 5 / 13; }
+  .idx { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; color: var(--gold); margin-bottom: 18px; }
+  h2 { font-size: clamp(28px, 3.4vw, 46px); line-height: 1.06; letter-spacing: -0.02em; font-weight: 600; }
+  .lead { color: var(--mut); font-size: 16px; max-width: 60ch; }
+  .lead b { color: var(--text); font-weight: 500; }
+
+  /* ── diagram ── */
+  .fig { margin-top: 44px; border: 1px solid var(--line); background: var(--panel); }
+  .fig-cap { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--faint); }
+  .fig svg { display: block; width: 100%; height: auto; }
+  .fig text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; fill: var(--mut); }
+  .fig .lbl { fill: var(--text); font-size: 11px; }
+  .fig .accent-t { fill: var(--orange); }
+  .fig rect.node { fill: var(--bg); stroke: var(--line-strong); }
+  .fig g.hot rect.node { stroke: var(--orange); }
+  .fig g[data-tip] { cursor: help; }
+  .fig g[data-tip]:hover rect.node { stroke: var(--gold); }
+  .fig path.wire { stroke: var(--faint); fill: none; }
+  .fig path.wire.hotw { stroke: var(--orange); }
+
+  /* ── skills 3x3 ── */
+  .grid9 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line);
+    border: 1px solid var(--line); }
+  .g9c { background: var(--bg); padding: clamp(20px, 2.6vw, 34px); transition: background 0.15s; }
+  .g9c:hover { background: var(--panel); }
+  .g9c i { display: block; font-family: var(--mono); font-style: normal; font-size: 10px;
+    letter-spacing: 0.18em; color: var(--gold); margin-bottom: 14px; }
+  .g9c b { display: block; font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 5px; }
+  .g9c span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--faint); }
+
+  /* ── projects (editorial rows) ── */
+  .plist { border-top: 1px solid var(--line); }
+  .prow { display: grid; grid-template-columns: 70px 1fr 170px 240px; gap: clamp(18px, 2.4vw, 40px);
+    align-items: center; padding: 28px 0; border-bottom: 1px solid var(--line);
+    transition: background 0.15s; }
+  .prow:hover { background: var(--panel); }
+  .prow:hover .pt { transform: translateX(6px); }
+  .pn { font-family: var(--mono); font-size: 12px; color: var(--faint); padding-left: 4px; }
+  .pt { transition: transform 0.2s; }
+  .pt h3 { font-size: clamp(17px, 1.8vw, 22px); font-weight: 600; letter-spacing: -0.01em; }
+  .pt .tags { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--faint); margin-top: 6px; }
+  .pm { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--gold); }
+  .pm a { display: block; color: var(--mut); text-decoration: none; margin-top: 8px; font-size: 10.5px;
+    letter-spacing: 0.14em; }
+  .pm a:hover { color: var(--cyan); }
+  .pth { position: relative; aspect-ratio: 16/9; border: 1px dashed var(--line-strong); overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(45deg, #121318 0 10px, #0d0e13 10px 20px); }
+  .pth img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pth span { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--faint); }
+  .clip { will-change: clip-path; }
+
+  /* ── experience ── */
+  .xsplit { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(28px, 4vw, 64px); }
+  .colhead { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; color: var(--faint);
+    padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); margin-bottom: 4px; }
+  .xrow { display: grid; grid-template-columns: 48px 1fr auto; gap: 18px; padding: 22px 0;
+    border-bottom: 1px solid var(--line); align-items: start; }
+  .lg { width: 48px; height: 48px; border: 1px dashed var(--line-strong); background: var(--panel);
+    display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .lg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 7px; }
+  .lg span { font-family: var(--mono); font-size: 11px; color: var(--gold); }
+  .xrow h3 { font-size: 16px; font-weight: 600; }
+  .xrow .org { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--cyan); margin: 3px 0 6px; }
+  .xrow p { font-size: 13px; color: var(--mut); max-width: 46ch; }
+  .xrow .when { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--faint);
+    padding-top: 3px; white-space: nowrap; }
+  .erow { padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .erow h3 { font-size: 16px; font-weight: 600; }
+  .erow .org { font-family: var(--mono); font-size: 11px; color: var(--gold); margin: 3px 0 6px; }
+  .erow p { font-size: 13px; color: var(--mut); }
+  .erow .when { font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 22px; }
+  .chip { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--mut);
+    border: 1px solid var(--line); padding: 8px 14px; transition: border-color 0.15s, color 0.15s; }
+  .chip:hover { border-color: var(--gold); color: var(--text); }
+
+  /* ── contact ── */
+  #contact .disp { font-size: clamp(36px, 5.4vw, 76px); }
+  .clinks { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 44px; }
+  .ulink { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; color: var(--text);
+    text-decoration: none; padding: 14px 22px; border: 1px solid var(--line-strong); position: relative;
+    transition: border-color 0.15s, color 0.15s; }
+  .ulink:hover { border-color: var(--cyan); color: var(--cyan); }
+  footer { border-top: 1px solid var(--line); }
+  .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 26px 0;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--faint); }
+
+  /* ── responsive ── */
+  @media (max-width: 1000px) {
+    .hero-left { grid-column: 1 / 13; }
+    .hero-right { grid-column: 1 / 13; max-width: 480px; }
+    .sec-head { grid-column: 1 / 13; margin-bottom: 8px; }
+    .sec-body { grid-column: 1 / 13; }
+    .prow { grid-template-columns: 44px 1fr; row-gap: 16px; }
+    .pm { grid-column: 2; }
+    .pth { grid-column: 1 / -1; max-width: 480px; }
+    .xsplit { grid-template-columns: 1fr; }
+    .nav ul { display: none; }
+  }
+  @media (max-width: 620px) {
+    .grid9 { grid-template-columns: 1fr 1fr 1fr; }
+    .g9c { padding: 14px 10px; }
+    .g9c b { font-size: 12px; }
+    .g9c span { font-size: 8.5px; letter-spacing: 0.08em; }
+  }
+</style>
+</head>
+<body>
+<div id="pbar"></div>
+<div class="fid f1" aria-hidden="true"></div>
+<div class="fid f2" aria-hidden="true"></div>
+<div class="fid f3" aria-hidden="true"></div>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><i></i>A.&nbsp;PAUL&nbsp;//&nbsp;SPACE&nbsp;HARDWARE</a>
+    <ul>
+      <li><a href="#overview">OVERVIEW</a></li>
+      <li><a href="#systems">SYSTEMS</a></li>
+      <li><a href="#missions">MISSIONS</a></li>
+      <li><a href="#log">EXPERIENCE LOG</a></li>
+    </ul>
+    <div class="navclock" id="utc" aria-hidden="true">UTC --:--:--</div>
+    <div class="navcta"><a class="btn" href="https://drive.google.com/file/d/1Fkml0IBQvZf9_jY70tSOrJOsaUp_YdgA/view?usp=sharing" target="_blank" rel="noopener">DOWNLOAD CV ↓</a></div>
+  </div>
+</header>
+
+<main id="top">
+
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-track">
+    <span>ALTIUM DESIGNER<b>·</b>KICAD <b>·</b>UPTO 8-LAYER LAYOUT<b>·</b>SI / PI<b>·</b>ECSS<b>·</b>NASA-STD-8739<b>·</b>IPC-7711/7721<b>·</b>FPGA / VHDL<b>·</b><b>·</b>FAULT INJECTION<b>·</b>BRING-UP<b>·</b></span>
+    <span>ALTIUM DESIGNER<b>·</b>KICAD <b>·</b>UPTO 8-LAYER LAYOUT<b>·</b>SI / PI<b>·</b>ECSS<b>·</b>NASA-STD-8739<b>·</b>IPC-7711/7721<b>·</b>FPGA / VHDL<b>·</b><b>·</b>FAULT INJECTION<b>·</b>BRING-UP<b>·</b></span>
+  </div></div>
+
+  <section id="hero" aria-label="Interactive black hole — scroll to cross the event horizon">
+    <div id="bh-wrap" aria-hidden="true"><canvas id="bh"></canvas></div>
+    <div class="bh-center">
+      <p class="kicker"><b>ABHRONIL PAUL</b><span>SPACECRAFT HARDWARE ENGINEER</span></p>
+      <h1 class="disp">
+        <span class="ln"><span>Architecting High-Reliability</span></span>
+        <span class="ln"><span>Electronics for <em>Space.</em></span></span>
+      </h1>
+      <p class="bh-sub">[ SCROLL TO CROSS EVENT HORIZON ]</p>
+    </div>
+  </section>
+
+  <section id="overview">
+    <span class="hudtag sec">SUBSYS: PWR // <b>NOMINAL</b></span>
+    <div class="wrap sec-grid">
+      <div class="sec-head">
+        <p class="idx">TP1 // OVERVIEW</p>
+        <h2><span class="ln"><span>Fault-tolerant avionics &amp;</span></span><span class="ln"><span>orbital instrumentation.</span></span></h2>
+      </div>
+      <div class="sec-body">
+        <div class="ov-grid">
+        <div>
+        <p class="lead" style="margin-bottom:18px;">I design high-reliability PCBs, precision instrumentation, and control systems
+          for harsh space environments and I stay with every board from schematic capture to production
+          handoff. </p>
+        <p class="lead">2+ years of aerospace hardware: an <b>8-layer radiation-tolerant lunar power distribution
+          unit</b>, CubeSat avionics qualified to <b>ECSS &amp; NASA-STD-8739</b>, and an MSc thesis at Politecnico
+          di Milano that catches motor-driver faults in <b>~3 ms — passively, in hardware</b>. I own boards from
+          schematic capture through bring-up to production handoff.</p>
+
+        <div class="princ">
+          <div class="princ-h"><span>OPERATING PRINCIPLES — HOW I BUILD</span><span>N=4</span></div>
+          <ol>
+            <li><span><b>Derate like the datasheet is lying.</b> At −40 °C on a lunar night, it usually is.</span></li>
+            <li><span><b>Every net earns a test point</b> until the board has earned my trust. This website is organised the same way.</span></li>
+            <li><span><b>The BOM is a design document.</b> Reading it like one cut 18% from a flight build.</span></li>
+            <li><span><b>Documentation is the deliverable.</b> The board is just the proof it compiled.</span></li>
+          </ol>
+        </div>
+
+        
+        </div>
+        <dl class="hero-right" aria-label="Key facts">
+        <span class="hudtag">SYS // <b>NOMINAL</b></span>
+        <div class="spec"><dt>EXPERIENCE</dt><dd>2+ YEARS · AEROSPACE</dd></div>
+        <div class="spec"><dt>EDUCATION</dt><dd>MSC · POLIMI '26</dd></div>
+        <div class="spec"><dt>STANDARDS</dt><dd>ECSS · NASA-STD · IPC</dd></div>
+        <div class="spec"><dt>STATUS</dt><dd><span class="dot" aria-hidden="true"></span>OPEN TO WORK</dd></div>
+        <a class="btn" href="https://drive.google.com/file/d/1Fkml0IBQvZf9_jY70tSOrJOsaUp_YdgA/view?usp=sharing" target="_blank" rel="noopener">DOWNLOAD CV ↓</a>
+        <div class="tblock" aria-label="Drawing title block">
+          <span>TITLE</span><span>PORTFOLIO · AP-01</span>
+          <span>DRAWN BY</span><span>A. PAUL</span>
+          <span>REV / DATE</span><span>5.0 · 2026-07</span>
+          <span>SHEET</span><span>1 / 1 · SCALE NTS</span>
+        </div>
+      </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="systems">
+    <span class="hudtag sec">CLASS: <b>ECSS / NASA-STD / IPC</b></span>
+    <div class="wrap sec-grid">
+      <div class="sec-head">
+        <p class="idx">TP2 // SYSTEMS</p>
+        <h2><span class="ln"><span>Engineering</span></span><span class="ln"><span>competency matrix.</span></span></h2>
+        <div class="sysb-col">
+          <span class="sysb">EDA &amp; LAYOUT — STATUS: <b>NOMINAL</b></span>
+          <span class="sysb">TEST &amp; VERIFICATION — CLASS: <b>ECSS / NASA</b></span>
+          <span class="sysb">EMBEDDED &amp; CONTROL — STATUS: <b>NOMINAL</b></span>
+        </div>
+      </div>
+      <div class="sec-body">
+        <div class="grid9">
+          <span class="hudtag">ENV: <b>-40°C … +85°C</b></span>
+          <div class="g9c"><em aria-hidden="true"></em><u>U1</u><i>01</i><b>Altium · KiCad</b><span>EDA</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U2</u><i>02</i><b>High-Speed Layout</b><span>8-LAYER · DDR4</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U3</u><i>03</i><b>SI / PI · EMC</b><span>INTEGRITY</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U4</u><i>04</i><b>Bring-Up &amp; Debug</b><span>LAB</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U5</u><i>05</i><b>ECSS · NASA-STD · IPC · MIL-STD</b><span>QUALIFICATION</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U6</u><i>06</i><b>H-i-L Fault Injection</b><span>VALIDATION</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U7</u><i>07</i><b>C / C++ · Python</b><span>FIRMWARE</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U8</u><i>08</i><b>FPGA · VHDL</b><span>DIGITAL</span></div>
+          <div class="g9c"><em aria-hidden="true"></em><u>U9</u><i>09</i><b>RISC-V → GDSII</b><span>SILICON</span></div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <section id="missions">
+    <span class="hudtag sec">PAYLOAD MANIFEST · <b>6 UNITS</b></span>
+    <div class="wrap sec-grid">
+      <div class="sec-head">
+        <p class="idx">TP3 // MISSION REPORTS</p>
+        <h2><span class="ln"><span>Mission</span></span><span class="ln"><span>reports.</span></span></h2>
+      </div>
+      <div class="sec-body">
+        <div class="plist">
+          <span class="hudtag">LAYER_COUNT: <b>8</b> · RAD_TOLERANT: <b>YES</b></span>
+          <article class="prow">
+            <div class="pn">001</div>
+            <div class="pt"><h3>Smart Passive Fault-Tolerant Wrapper</h3><div class="tags">MSC THESIS · DRV8462 · MIXED-SIGNAL</div></div>
+            <div class="pm">~3 MS DETECT</div>
+            <div class="pth clip"><img src="images/spftw.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span>IMAGE · 16:9</span></div>
+          </article>
+          <article class="prow">
+            <div class="pn">002</div>
+            <div class="pt"><h3>Lunar Rover Power Distribution Unit</h3><div class="tags">LUNAR OUTPOST EU · 8-LAYER · RAD-TOLERANT</div></div>
+            <div class="pm">−18% BOM</div>
+            <div class="pth clip"><img src="images/lunar-pdu.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span>IMAGE · 16:9</span></div>
+          </article>
+          <article class="prow">
+            <div class="pn">003</div>
+            <div class="pt"><h3>CubeSat Debris Detection Pipeline</h3><div class="tags">ENDUROSAT · ULTRASONIC · MATLAB DSP</div></div>
+            <div class="pm">TRAJECTORY EST.<a href="https://github.com/PaulZeroOne" target="_blank" rel="noopener">GITHUB ↗</a></div>
+            <div class="pth clip"><img src="images/cube.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span>IMAGE · 16:9</span></div>
+          </article>
+          <article class="prow">
+            <div class="pn">004</div>
+            <div class="pt"><h3>PESCA — 6S CubeSat Payload</h3><div class="tags">DAQ · PEROVSKITE CHARACTERISATION</div></div>
+            <div class="pm">FLIGHT PAYLOAD<a href="https://github.com/PaulZeroOne" target="_blank" rel="noopener">GITHUB ↗</a></div>
+            <div class="pth clip"><img src="images/pesca.png" alt="" loading="lazy" onerror="this.style.display='none'"><span>IMAGE · 16:9</span></div>
+          </article>
+          <article class="prow">
+            <div class="pn">005</div>
+            <div class="pt"><h3>Edge AI Debris Accelerator</h3><div class="tags">FPGA · CNN INFERENCE · AVIONICS</div></div>
+            <div class="pm">EDGE CNN<a href="https://github.com/PaulZeroOne" target="_blank" rel="noopener">GITHUB ↗</a></div>
+            <div class="pth clip"><img src="images/fpga.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span>IMAGE · 16:9</span></div>
+          </article>
+          <article class="prow">
+            <div class="pn">006</div>
+            <div class="pt"><h3>RISC-V Core — RTL to GDSII</h3><div class="tags">OPEN SOURCE · OPENLANE</div></div>
+            <div class="pm">TAPEOUT FLOW<a href="https://github.com/PaulZeroOne" target="_blank" rel="noopener">GITHUB ↗</a></div>
+            <div class="pth clip"><img src="images/riscv.png" alt="" loading="lazy" onerror="this.style.display='none'"><span>IMAGE · 16:9</span></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="log">
+    <span class="hudtag sec">EXPERIENCE LOG · <b>SYNCED</b></span>
+    <div class="wrap sec-grid">
+      <div class="sec-head">
+        <p class="idx">TP4 // EXPERIENCE LOG</p>
+        <h2><span class="ln"><span>Experience</span></span><span class="ln"><span>log.</span></span></h2>
+      </div>
+      <div class="sec-body">
+
+
+        <div class="xsplit">
+          <div>
+            <div class="colhead">EXPERIENCE</div>
+            <div class="xrow"><div class="lg"><img src="images/lunar.png" alt="Lunar Outpost EU logo" onerror="this.style.display='none'"><span>LO</span></div>
+              <div><h3>Hardware Engineer</h3><div class="org">LUNAR OUTPOST EU</div>
+              <p>Co-lead architect, lunar power distribution &amp; sensing. Full lifecycle; −18% BOM.</p></div>
+              <div class="when">2025 — 2026<br>// COMPLETE</div></div>
+            <div class="xrow"><div class="lg"><img src="images/revolv.jpg" alt="Revolv Space logo" onerror="this.style.display='none'"><span>RS</span></div>
+              <div><h3>Hardware Engineer Intern</h3><div class="org">REVOLV SPACE BV</div>
+              <p>Rad-tolerant CubeSat avionics; ECSS &amp; NASA-STD-8739 passed; fault-injection firmware.</p></div>
+              <div class="when">2025<br>// COMPLETE</div></div>
+            <div class="xrow"><div class="lg"><img src="images/capsule.png" alt="Capsule Corporation logo" onerror="this.style.display='none'"><span>CC</span></div>
+              <div><h3>Avionics Systems Engineer</h3><div class="org">CAPSULE CORPORATION SRL</div>
+              <p>First hardware hire; four revisions in 12 months to TRL readiness.</p></div>
+              <div class="when">2023 — 25<br>// COMPLETE</div></div>
+            <div class="xrow"><div class="lg"><img src="images/st.png" alt="STMicroelectronics logo" onerror="this.style.display='none'"><span>ST</span></div>
+              <div><h3>R&amp;D Intern</h3><div class="org">STMICROELECTRONICS</div>
+              <p>RTL design &amp; verification for STM32 control blocks.</p></div>
+              <div class="when">2022<br>// COMPLETE</div></div>
+          </div>
+          <div>
+            <div class="colhead">EDUCATION</div>
+            <div class="erow"><div class="when">2026</div><h3>M.S. Electronics Engineering</h3>
+              <div class="org">POLITECNICO DI MILANO</div>
+              <p>Thesis: passive fault-tolerant wrapper for stepper drivers (DRV8462).</p></div>
+            <div class="erow"><div class="when">2022</div><h3>B.E. Electronics Engineering</h3>
+              <div class="org">THAPAR UNIVERSITY</div></div>
+            <div class="colhead" style="margin-top:34px;">CERTIFICATION &amp; COMMUNITY</div>
+            <div class="chips">
+              <span class="chip">IPC-7711/7721</span><span class="chip">SGAC SMALL SATELLITES</span>
+              <span class="chip">POLISPACE · ESA FYS</span><span class="chip">ENDUROSAT</span><span class="chip">FORMULA STUDENT BMS</span>
+            </div>
+            <div class="colhead" style="margin-top:36px;">THE BENCH · CURRENTLY</div>
+            <div class="pth clip" style="aspect-ratio:4/3;"><img src="images/bench.jpeg" alt="My workbench" loading="lazy" onerror="this.style.display='none'"><span>BENCH PHOTO · 4:3</span></div>
+            <dl style="margin-top:6px;">
+              <div class="nowrow"><dt>BUILDING</dt><dd>PCBFLOW · NEXT REV</dd></div>
+              <div class="nowrow"><dt>READING</dt><dd>— CHIP WAR —</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="rlog">
+          <div class="fig-cap" style="border:1px solid var(--line);"><span>REVISION HISTORY — SELF</span><span>ONE ENGINEER, ITERATING</span></div>
+          <div class="rrow"><span class="rv">REV 1.0</span><span class="rs">2020 · FORMULA STUDENT</span>
+            <p>First real board: the team's BMS. Learned that <b>automotive connectors cost more than my rent</b> — and exactly why they're worth it.</p></div>
+          <div class="rrow"><span class="rv">REV 2.0</span><span class="rs">2022 · STMICROELECTRONICS</span>
+            <p>RTL verification internship. Discovered I enjoy <b>proving things broken</b> almost as much as building them.</p></div>
+          <div class="rrow"><span class="rv">REV 3.0</span><span class="rs">2023–25 · CAPSULE CORPORATION</span>
+            <p>First hardware hire. Four revisions in twelve months; <b>Rev B and I don't talk about the diode</b>.</p></div>
+          <div class="rrow"><span class="rv">REV 4.0</span><span class="rs">2025 · REVOLV SPACE</span>
+            <p>ECSS paperwork taught me patience. <b>Fault injection taught me humility</b> — my own boards confess under enough voltage.</p></div>
+          <div class="rrow"><span class="rv">REV 5.0</span><span class="rs">NOW · LUNAR OUTPOST EU</span>
+            <p>Power distribution for a <b>garage on the Moon</b>. I still reread that sentence sometimes.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <span class="hudtag sec">COMMS: <b>OPEN</b></span>
+    <div class="wrap">
+      <p class="idx">TP5 // CONTACT</p>
+      <h2 class="disp">
+        <span class="ln"><span>Let's build hardware</span></span>
+        <span class="ln"><span>that <em>doesn't come back</em></span></span>
+        <span class="ln"><span>for repairs.</span></span>
+      </h2>
+      <div class="clinks">
+        <a class="ulink" href="mailto:paul.abhronil@gmail.com">PAUL.ABHRONIL@GMAIL.COM</a>
+        <a class="ulink" href="https://linkedin.com/in/abhronilpaul0" target="_blank" rel="noopener">LINKEDIN ↗</a>
+        <a class="ulink" href="https://github.com/PaulZeroOne" target="_blank" rel="noopener">GITHUB ↗</a>
+        <a class="btn" href="https://drive.google.com/file/d/1Fkml0IBQvZf9_jY70tSOrJOsaUp_YdgA/view?usp=sharing" target="_blank" rel="noopener">DOWNLOAD CV ↓</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="gnd" aria-hidden="true">
+    <svg width="36" height="26" viewBox="0 0 36 26">
+      <path d="M18 0 V10 M6 10 H30 M10.5 15 H25.5 M15 20 H21" stroke="#6E7784" stroke-width="1.6" fill="none"/>
+    </svg>
+    <span>SIGNAL TERMINATED · GND</span>
+  </div>
+  <div class="wrap foot">
+    <span>EOF // SYSTEM STATUS: <b style="color:var(--gold);font-weight:400;">NOMINAL</b></span>
+    <span>BOM: 1× SENIOR HARDWARE ENGINEER · STATUS: <b style="color:var(--gold);font-weight:400;">IN STOCK</b></span>
+    <span>© 2026 ABHRONIL PAUL // ALL RIGHTS RESERVED</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script>
+'use strict';
+/* State + performant reveals only: transform, opacity, clip-path, SVG stroke.
+   No canvas. No layout-affecting animation. Content fully readable without JS. */
+const REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+
+/* ═══ BLACK-HOLE ENGINE — single-pass WebGL fragment shader ═══════════
+   Monochrome + gold. One fullscreen triangle, ~40 lines of math, no
+   textures, no particles: locked 60fps on integrated GPUs.
+   ── TUNING ──────────────────────────────────────────────────────────
+   CFG.LENS ............ global gravitational-lensing strength (0.03–0.09)
+   CFG.WAKE_FALLOFF .... size of the cursor's water pocket (higher = tighter)
+   CFG.WAKE_STRENGTH ... how far stars are shoved (0 disables the wake)
+   CFG.TRANSITION_VH ... scroll runway (viewport heights) to cross the horizon
+   CFG.ZOOM ............ how aggressively the horizon swallows the viewport */
+const CFG = { LENS: 0.052, WAKE_FALLOFF: 13.0, WAKE_STRENGTH: 1.25, TRANSITION_VH: 1.55, ZOOM: 9.0, DPR_MAX: 1.75 };
+const bhWrap = document.getElementById('bh-wrap');
+const bhCenter = document.querySelector('.bh-center');
+let bh = null;
+(function initBH() {
+  if (!bhWrap) return;
+  const cv = document.getElementById('bh');
+  let gl = null;
+  try { gl = cv.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' }); } catch (e) {}
+  const fallback = why => {
+    console.error('[BLACK HOLE] fallback mode:', why);
+    bhWrap.classList.add('bh-fallback');
+    const b = document.createElement('div');
+    b.className = 'bh-err';
+    b.textContent = 'RENDER: STATIC FALLBACK — ' + why;
+    bhWrap.appendChild(b);
+    if (cv.parentNode) cv.remove();
+  };
+  if (!gl) { fallback('WEBGL CONTEXT UNAVAILABLE'); return; }
+  const VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+  const FS = [
+    'precision highp float;',
+    'uniform vec2 uRes;uniform float uT;uniform vec2 uM;uniform vec2 uV;uniform float uA;uniform float uS;',
+    'uniform float uLens;uniform float uWake;uniform float uZoom;',
+    'float hash(vec2 p){p=fract(p*vec2(0.1031,0.1030));p+=dot(p,p.yx+33.33);return fract((p.x+p.y)*p.x);}',
+    'uniform float uTT;',
+    'float stars(vec2 p,float n,float th,float sz){',
+    '  vec2 c=floor(p*n);vec2 f=fract(p*n);',
+    '  float h=hash(c);',
+    '  vec2 sp=vec2(hash(c+11.13),hash(c+27.71));',       /* star position inside its cell */
+    '  vec2 d=f-sp;',
+    '  float tw=0.55+0.45*sin(uTT*2.2+h*6.2832);',        /* per-star twinkle phase */
+    '  return step(th,h)*exp(-dot(d,d)*sz)*tw*(0.45+0.55*hash(c+3.7));',
+    '}',
+    'void main(){',
+    '  vec2 uv=(gl_FragCoord.xy-0.5*uRes)/uRes.y;',
+    '  float zm=1.0+uS*uS*uZoom;',
+    '  vec2 p=uv/zm;',
+    '  float r=max(length(p),1e-4);',
+    '  float defl=min(uLens/r,r*0.85);',
+    '  vec2 q=p-(p/r)*defl;',                                /* hole bends spacetime */
+    '  float rr=length(q);',
+    /* water-wake: cursor displaces the STARFIELD, not the disk —
+       radial push + stroke-following drag inside a soft pocket */
+    '  vec2 mp=vec2(uM.x*uRes.x/uRes.y,uM.y)*0.5/zm;',
+    '  vec2 dm=q-mp;',
+    '  float d2=dot(dm,dm);',
+    '  float fall=exp(-d2*uWake);',
+    '  vec2 b=q+((dm/sqrt(d2+1e-4))*0.09+uV*1.25)*fall*uA;',
+    '  float star=stars(b,42.0,0.978,55.0)*1.15',        /* bright, haloed */
+    '            +stars(b,90.0,0.982,150.0)*0.7',          /* mid field */
+    '            +stars(b,180.0,0.988,300.0)*0.45;',       /* fine dust */
+    '  vec2 n1=b-vec2(-0.55,0.27); vec2 n2=b-vec2(0.62,-0.3);',
+    '  float neb=exp(-dot(n1,n1)*5.0); float neb2=exp(-dot(n2,n2)*4.5);',
+    '  vec2 gp=b*9.0;',
+    '  float line=max(smoothstep(0.47,0.5,abs(fract(gp.x)-0.5)),smoothstep(0.47,0.5,abs(fract(gp.y)-0.5)));',
+    /* Gargantua: thin equatorial disk, white-hot inner rim, doppler beaming */
+    '  vec2 dq=vec2(q.x,q.y*3.4);',
+    '  float rd=length(dq);',
+    '  float ang=atan(dq.y,dq.x);',
+    '  float rot=uT*(0.16+uS*1.6);',
+    '  float band=exp(-pow((rd-0.34)*11.0,2.0))+exp(-pow((rd-0.27)*34.0,2.0))*1.3;',
+    '  float dopp=pow(0.5+0.5*cos(ang+rot*0.3),2.0)*1.7+0.12;',
+    '  float streak=0.8+0.2*sin(9.0*(ang+rot)+rd*24.0);',
+    '  float disk=band*streak*dopp;',
+    /* the signature: far-side disk lensed into an arch OVER and UNDER the shadow */
+    '  float pol=abs(sin(atan(q.y,q.x)));',
+    '  float halo=exp(-pow((rr-0.2)*26.0,2.0))*(0.25+0.75*pol)*1.15;',
+    '  float ph=exp(-abs(rr-0.15)*170.0)*1.3;',
+    '  float hole=smoothstep(0.128,0.14,rr);',
+    '  vec3 amber=vec3(1.0,0.62,0.22);',
+    '  vec3 hot=vec3(1.0,0.97,0.9);',
+    '  vec3 dcol=mix(hot,amber,smoothstep(0.26,0.5,rd));',
+    '  vec3 hcol=mix(hot,amber,smoothstep(0.16,0.24,rr));',
+    '  vec3 col=vec3(0.008,0.008,0.014);',
+    '  col+=(vec3(0.35,0.45,0.75)*neb+vec3(0.55,0.38,0.2)*neb2)*0.16*hole;',
+    '  col+=vec3(0.85,0.9,1.0)*star*hole;',
+    '  col+=vec3(0.9)*line*0.03*hole;',
+    '  col+=dcol*disk*1.5*hole;',
+    '  col+=hcol*halo*hole;',
+    '  col+=hot*ph;',
+    '  col*=1.0-smoothstep(0.72,0.98,uS);',
+    '  gl_FragColor=vec4(col,1.0);',
+    '}'].join('\n');
+  const mk = (t, src) => {
+    const o = gl.createShader(t);
+    gl.shaderSource(o, src); gl.compileShader(o);
+    if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(o)); return null; }
+    return o;
+  };
+  const vs = mk(gl.VERTEX_SHADER, VS), fs = mk(gl.FRAGMENT_SHADER, FS);
+  if (!vs || !fs) { fallback('SHADER COMPILE FAILED — SEE CONSOLE'); return; }
+  const pr = gl.createProgram();
+  gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { fallback('SHADER LINK FAILED — SEE CONSOLE'); return; }
+  gl.useProgram(pr);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, 'a');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = {};
+  ['uRes', 'uT', 'uTT', 'uM', 'uV', 'uA', 'uS', 'uLens', 'uWake', 'uZoom'].forEach(n => { U[n] = gl.getUniformLocation(pr, n); });
+  gl.uniform1f(U.uLens, CFG.LENS);
+  gl.uniform1f(U.uWake, CFG.WAKE_FALLOFF);
+  gl.uniform1f(U.uZoom, CFG.ZOOM);
+  const resize = () => {
+    const d = Math.min(devicePixelRatio || 1, CFG.DPR_MAX);
+    cv.width = Math.round(innerWidth * d); cv.height = Math.round(innerHeight * d);
+    gl.viewport(0, 0, cv.width, cv.height);
+    gl.uniform2f(U.uRes, cv.width, cv.height);
+  };
+  resize();
+  addEventListener('resize', resize);
+  console.info('[BLACK HOLE] shader compiled + linked OK');
+  bh = { draw(t, mx, my, vx, vy, amp, sc) {
+    const tw = (t % 1256.63) * (REDUCED ? 0.4 : 1);   /* reduced-motion: slower, never frozen */
+    gl.uniform1f(U.uT, tw);
+    gl.uniform1f(U.uTT, tw);
+    gl.uniform2f(U.uM, mx, my);
+    gl.uniform2f(U.uV, vx, vy);
+    gl.uniform1f(U.uA, amp);
+    gl.uniform1f(U.uS, sc);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  } };
+})();
+
+/* Phase 2 choreography: damped scroll drives expansion, crossing, reveal */
+let bmx = 0, bmy = 0, smx = 0, smy = 0, sS = 0, bhGone = false;
+let lmx = 0, lmy = 0, wvx = 0, wvy = 0, wamp = 0, bhPrevT = 0, dbgN = 0;
+/* open the page with ?debug appended to the URL for live telemetry */
+const dbgEl = (/[?&]debug/.test(location.search) && bhWrap) ? (() => {
+  const d = document.createElement('div');
+  d.className = 'bh-err'; d.style.color = 'var(--cyan)'; d.style.borderColor = 'var(--cyan)';
+  bhWrap.appendChild(d); return d;
+})() : null;
+addEventListener('pointermove', e => {
+  bmx = (e.clientX / innerWidth) * 2 - 1;
+  bmy = -((e.clientY / innerHeight) * 2 - 1);
+}, { passive: true });
+function bhFrame(tms) {
+  requestAnimationFrame(bhFrame);
+  if (!bhWrap) return;
+  const target = Math.min(1.05, (window.scrollY || 0) / (innerHeight * CFG.TRANSITION_VH));
+  sS += (target - sS) * 0.1;                       /* weighted, no snap */
+  smx += (bmx - smx) * 0.14; smy += (bmy - smy) * 0.14;   /* pocket follows the hand */
+  /* hand-through-water: velocity-driven amplitude — rises fast with a
+     stroke, settles slowly like a disturbed surface */
+  const dtF = Math.min(0.05, Math.max(0.004, (tms - bhPrevT) / 1000)); bhPrevT = tms;
+  const dxm = bmx - lmx, dym = bmy - lmy;
+  lmx = bmx; lmy = bmy;
+  wvx += (dxm / dtF * 0.22 - wvx) * 0.12; wvy += (dym / dtF * 0.22 - wvy) * 0.12;   /* Hz-independent */
+  const stroke = Math.min(1.5, Math.hypot(wvx, wvy) * 2.4);
+  wamp += (stroke > wamp) ? (stroke - wamp) * 0.35 : (stroke - wamp) * 0.02;
+  const gone = sS > 0.995;
+  if (gone !== bhGone) {
+    bhGone = gone;
+    bhWrap.classList.toggle('gone', gone);          /* free the GPU past the horizon */
+    if (bhCenter) bhCenter.classList.toggle('gone', gone);
+  }
+  document.body.classList.toggle('crossed', sS > 0.62);   /* blueprint grid fades in */
+  if (bhCenter && !gone) {
+    bhCenter.style.opacity = Math.max(0, 1 - sS * 1.9);
+    bhCenter.style.transform = 'translateY(' + (-sS * 30) + 'vh) scale(' + (1 - sS * 0.2) + ')';
+  }
+  /* base dimple: the surface always yields under the cursor, stroke adds the splash */
+  const uAmp = ((sS < 0.6 ? 0.32 : 0) + wamp * CFG.WAKE_STRENGTH) * (REDUCED ? 0.7 : 1);
+  if (dbgEl && (dbgN++ % 8 === 0)) dbgEl.textContent =
+    'DBG · SHADER:' + (bh ? 'OK' : 'FAIL') + ' · RM:' + (REDUCED ? 'ON' : 'OFF') +
+    ' · AMP:' + uAmp.toFixed(2) + ' · PTR:' + bmx.toFixed(2) + ',' + bmy.toFixed(2) + ' · S:' + sS.toFixed(2);
+  if (bh && !gone && !document.hidden) bh.draw(tms * 0.001, smx, smy, wvx, wvy, uAmp, Math.min(sS, 1));
+}
+requestAnimationFrame(bhFrame);
+
+let lenis = null;
+if (window.Lenis && window.gsap && window.ScrollTrigger && !REDUCED) {
+  gsap.registerPlugin(ScrollTrigger);
+  lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.fps(60);
+  gsap.ticker.lagSmoothing(0);
+} else if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+/* anchors through Lenis */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const el = document.querySelector(a.getAttribute('href'));
+    if (!el) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(el, { offset: -63 }); else el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+/* UTC mission clock */
+const utcEl = document.getElementById('utc');
+if (utcEl) {
+  const tickUTC = () => { utcEl.textContent = 'UTC ' + new Date().toISOString().substr(11, 8); };
+  tickUTC(); setInterval(tickUTC, 1000);
+}
+
+/* scroll progress (transform only) */
+const pbar = document.getElementById('pbar');
+const onScroll = () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  if (pbar) pbar.style.transform = 'scaleX(' + (max > 0 ? window.scrollY / max : 0) + ')';
+};
+addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+if (window.gsap && window.ScrollTrigger && !REDUCED) {
+  /* hero lines rise from their masks on load */
+  gsap.from('#hero .ln > span', { yPercent: 115, duration: 1.05, ease: 'power4.out', stagger: 0.09, delay: 0.15 });
+  gsap.from('#hero .kicker, .bh-sub', { opacity: 0, y: 14, duration: 0.8, ease: 'power2.out', stagger: 0.12, delay: 0.6 });
+
+  /* section headings: masked line reveals on approach */
+  document.querySelectorAll('section:not(#hero)').forEach(sec => {
+    const lines = sec.querySelectorAll('.ln > span');
+    if (lines.length) gsap.from(lines, { yPercent: 115, duration: 0.9, ease: 'power4.out', stagger: 0.08,
+      scrollTrigger: { trigger: sec, start: 'top 74%' } });
+  });
+
+  /* editorial content reveals — opacity/transform only */
+  gsap.utils.toArray('.lead, .fig, .colhead, .princ, .rlog .rrow, .nowrow').forEach(el => {
+    gsap.from(el, { opacity: 0, y: 24, duration: 0.75, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 82%' } });
+  });
+  gsap.from('.grid9 .g9c', { opacity: 0, y: 18, duration: 0.5, ease: 'power2.out', stagger: 0.05,
+    scrollTrigger: { trigger: '.grid9', start: 'top 84%' } });
+  gsap.utils.toArray('.prow, .xrow, .erow').forEach(el => {
+    gsap.from(el, { opacity: 0, y: 22, duration: 0.6, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' } });
+  });
+  /* thumbnails clip in from 0% height */
+  gsap.utils.toArray('.clip').forEach(el => {
+    gsap.fromTo(el, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.9, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 86%' } });
+  });
+  /* FIG.02 stackup: layers slide in like a lamination sequence */
+  gsap.from('.fig2 g.layer, .fig2 rect.diel', { opacity: 0, x: -14, duration: 0.5, ease: 'power2.out', stagger: 0.06,
+    scrollTrigger: { trigger: '.fig2', start: 'top 78%' } });
+
+  /* FIG.01 wires draw in */
+  document.querySelectorAll('.fig .draw').forEach(p2 => {
+    const L = p2.getTotalLength();
+    p2.style.strokeDasharray = L;
+    p2.style.strokeDashoffset = L;
+    gsap.to(p2, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut',
+      scrollTrigger: { trigger: '.fig', start: 'top 76%' } });
+  });
+  /* copper trace rails: orthogonal SVG runs drawn in by scroll, with vias */
+  const buildTraces = () => {
+    if (innerWidth < 1000) return;
+    const ns = 'http://www.w3.org/2000/svg';
+    document.querySelectorAll('main section:not(#hero)').forEach((sec, k) => {
+      if (sec.querySelector('.trace-rail')) return;
+      const h = sec.offsetHeight;
+      const jog = 120 + k * 26;
+      const svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('class', 'trace-rail');
+      svg.setAttribute('viewBox', '0 0 24 ' + h);
+      svg.setAttribute('width', '24');
+      svg.setAttribute('height', h);
+      const d = 'M12 0 V ' + jog + ' H 20 V ' + (h - 34);
+      const path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', d);
+      svg.appendChild(path);
+      [[12, 6], [20, h - 34]].forEach(([cx, cy]) => {
+        const c = document.createElementNS(ns, 'circle');
+        c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', 3);
+        svg.appendChild(c);
+      });
+      sec.appendChild(svg);
+      const L = path.getTotalLength();
+      path.style.strokeDasharray = L;
+      gsap.fromTo(path, { strokeDashoffset: L }, { strokeDashoffset: 0, ease: 'none',
+        scrollTrigger: { trigger: sec, start: 'top 85%', end: 'bottom 70%', scrub: true } });
+      gsap.from(svg.querySelectorAll('circle'), { opacity: 0, duration: 0.4, stagger: 0.2,
+        scrollTrigger: { trigger: sec, start: 'top 80%' } });
+    });
+    ScrollTrigger.refresh();
+  };
+  addEventListener('load', buildTraces);
+
+  /* nav active state */
+  document.querySelectorAll('main section[id]').forEach(sec => {
+    ScrollTrigger.create({
+      trigger: sec, start: 'top 50%', end: 'bottom 50%',
+      onToggle: self => {
+        if (!self.isActive) return;
+        document.querySelectorAll('.nav ul a').forEach(a =>
+          a.classList.toggle('active', a.getAttribute('href') === '#' + sec.id));
+      },
+    });
+  });
+}
+</script>
+</body>
+</html>
